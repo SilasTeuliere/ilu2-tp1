@@ -8,8 +8,10 @@ public class Village {
 	private Chef chef;
 	private Gaulois[] villageois;
 	private int nbVillageois = 0;
-
-	public Village(String nom, int nbVillageoisMaximum) {
+	private int nbEtal;
+	private Marche marche;
+	public Village(String nom, int nbVillageoisMaximum, int nbEtal) {
+		this.nbEtal = nbEtal;
 		this.nom = nom;
 		villageois = new Gaulois[nbVillageoisMaximum];
 	}
@@ -55,5 +57,79 @@ public class Village {
 			}
 		}
 		return chaine.toString();
+	}
+	
+
+	
+	
+	public static class Marche {
+		private Etal[] etals;
+		public Marche(int nbEtal) {
+			this.etals = new Etal[nbEtal];
+			for(int i = 0; i < nbEtal; i++) {
+				this.etals[i] = new Etal();
+			}
+		}
+		
+		void utiliserEtal(int indiceEtal, Gaulois vendeur, String produit, int nbProduit) {
+			etals[indiceEtal].occuperEtal(vendeur, produit, nbProduit);
+		}
+		
+		int trouverEtalLibre() {
+			int etalLibre = -1;
+			for(int i = 0; i < etals.length; i++) {
+				if(etals[i].isEtalOccupe() == false) {
+					etalLibre = i;
+					i = etals.length;
+				}
+			}
+			return etalLibre;
+		}
+		
+		Etal[] trouverEtals(String produit) {
+			int nbEtalsProd = 0;
+			Etal[] etalsProd;
+			for(int i = 0; i < etals.length; i++) {
+				if(etals[i].contientProduit(produit) == true) {
+					nbEtalsProd++;
+				}
+			}
+			etalsProd = new Etal[nbEtalsProd];
+			int ind = 0;
+			for(int i = 0; i < etals.length; i++) {
+				if(etals[i].contientProduit(produit) == true) {
+					etalsProd[ind] = etals[i];
+					ind++;
+				}
+			}
+			return etalsProd;
+		}
+		
+		 Etal trouverVendeur(Gaulois gaulois) {
+			 Etal etal = null;
+			 for(int i = 0; i < etals.length; i++) {
+				 if(etals[i].getVendeur().equals(gaulois) ) {
+					 etal = etals[i];
+					 i = etals.length;
+				 }
+			 }
+		 return etal;
+		 }
+		 
+		 String afficherMarche(){
+			 String chaine = new String();
+			 int nbEtalVide = 0;
+			 for(int i = 0; i < etals.length; i++) {
+				 if(etals[i].isEtalOccupe() == true) {
+				 	chaine = chaine + etals[i].afficherEtal();
+				 }
+				 else {
+					 nbEtalVide++;
+				 }
+			 }
+			 chaine = chaine + "Il reste " + nbEtalVide + " étals non utilisés dans le marché.\n";
+			 return chaine;
+		 }
+		 
 	}
 }
