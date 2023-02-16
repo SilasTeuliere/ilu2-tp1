@@ -9,7 +9,8 @@ public class Village {
 	private Gaulois[] villageois;
 	private int nbVillageois = 0;
 	private int nbEtal;
-	private Marche marche;
+	private Marche marche = new Marche(nbEtal);
+
 	public Village(String nom, int nbVillageoisMaximum, int nbEtal) {
 		this.nbEtal = nbEtal;
 		this.nom = nom;
@@ -59,6 +60,14 @@ public class Village {
 		return chaine.toString();
 	}
 	
+	public String installerVendeur(Gaulois vendeur, String produit,int
+			nbProduit) {
+		StringBuilder chaine = new StringBuilder();
+		int indiceEtal = marche.trouverEtalLibre();
+		marche.utiliserEtal(indiceEtal, vendeur, produit, nbProduit);
+		chaine.append(" le vendeur "+ vendeur.getNom() +"est installé");
+		return chaine.toString();
+	}
 
 	
 	
@@ -78,9 +87,9 @@ public class Village {
 		int trouverEtalLibre() {
 			int etalLibre = -1;
 			for(int i = 0; i < etals.length; i++) {
-				if(etals[i].isEtalOccupe() == false) {
+				if (!etals[i].isEtalOccupe()) {
 					etalLibre = i;
-					i = etals.length;
+					i = etals.length-1;
 				}
 			}
 			return etalLibre;
@@ -110,7 +119,7 @@ public class Village {
 			 for(int i = 0; i < etals.length; i++) {
 				 if(etals[i].getVendeur().equals(gaulois) ) {
 					 etal = etals[i];
-					 i = etals.length;
+					 i = etals.length - 1;
 				 }
 			 }
 		 return etal;
