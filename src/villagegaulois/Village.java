@@ -60,23 +60,56 @@ public class Village {
 		return chaine.toString();
 	}
 	
-	public String installerVendeur(Gaulois vendeur, String produit,int
-			nbProduit) {
-		StringBuilder chaine = new StringBuilder();
-		int indiceEtal = marche.trouverEtalLibre();
-		marche.utiliserEtal(indiceEtal, vendeur, produit, nbProduit);
-		chaine.append(" le vendeur "+ vendeur.getNom() +"est installé");
-		return chaine.toString();
+	public String installerVendeur(Gaulois vendeur, String produit, int nbProduit) {
+		StringBuilder text = new StringBuilder(vendeur.getNom() + " cherche un endroit pour vendre " + nbProduit + " " + produit + "\n");
+		int posEtal = marche.trouverEtalLibre();
+		if (posEtal == -1) {
+			text.append("Aucun étal disponible pour " + vendeur.getNom());
+		} else {
+			marche.utiliserEtal(posEtal, vendeur, produit, nbProduit);
+			text.append("Le vendeur " + vendeur.getNom() + " vend des " + produit + " à l'étal n°" + posEtal + "\n");
+		}
+		return text.toString();
 	}
 
-	
+	public String rechercherVendeursProduit(String produit) {
+		StringBuilder text = new StringBuilder("Les vendeurs qui proposent des " + produit + " sont :\n");
+		Etal[] listEtal = marche.trouverEtals(produit);
+		for (int i = 0; i < listEtal.length; i++) {
+			text.append("	- " + listEtal[i].getVendeur().getNom() + "\n");
+		}
+		return text.toString();
+	}
+
+	public Etal rechercherEtal(Gaulois vendeur) {
+		return marche.trouverVendeur(vendeur);
+	}
+
+	public String partirVendeur(Gaulois vendeur) {
+		StringBuilder text = new StringBuilder();
+		try {
+			Etal etal = marche.trouverVendeur(vendeur);
+			text.append(etal.libererEtal());
+
+		} catch (IllegalStateException e) {
+			text.append(e.getMessage());
+			e.printStackTrace();
+		}
+		return text.toString();
+	}
+
+	public String afficherMarche() {
+		return marche.afficherMarche();
+	}
 	
 	public static class Marche {
 		private Etal[] etals;
-		public Marche(int nbEtal) {
-			this.etals = new Etal[nbEtal];
-			for(int i = 0; i < nbEtal; i++) {
-				this.etals[i] = new Etal();
+		private int nbEtals;
+		private Marche(int nbEtals) {
+			this.nbEtals = nbEtals;
+			this.etals = new Etal[nbEtals];
+			for(int i = 0; i < nbEtals; i++) {
+				etals[i] = new Etal();
 			}
 		}
 		
