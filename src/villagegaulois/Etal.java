@@ -26,13 +26,13 @@ public class Etal {
 	}
 
 	public String libererEtal() {
+		if (!etalOccupe)
+			throw new IllegalStateException("L'étal est déjà vide");
 		etalOccupe = false;
-		StringBuilder chaine = new StringBuilder(
-				"Le vendeur " + vendeur.getNom() + " quitte son Ã©tal, ");
+		StringBuilder chaine = new StringBuilder("Le vendeur " + vendeur.getNom() + " quitte son étal, ");
 		int produitVendu = quantiteDebutMarche - quantite;
 		if (produitVendu > 0) {
-			chaine.append(
-					"il a vendu " + produitVendu + " parmi " + produit + ".\n");
+			chaine.append("il a vendu " + produitVendu + " parmi " + produit + ".\n");
 		} else {
 			chaine.append("il n'a malheureusement rien vendu.\n");
 		}
